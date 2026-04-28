@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('token');
+
+  let isVerified = false;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      isVerified = !!payload.is_verified;
+    } catch (e) {
+      console.error('Erro ao decodificar token');
+    }
+  }
+
   const feedbackSessao = localStorage.getItem('feedback_sessao');
   const feedbackAgendamento = localStorage.getItem('feedback_agendamento');
   const origemLogin = localStorage.getItem('origem_login');
@@ -17,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const API_BASE_URL = 'http://localhost:3000/api/v1';
   const corpoTabela = document.getElementById('corpoTabela');
   const containerPaginacao = document.getElementById('paginacao');
-  const token = localStorage.getItem('token');
 
   const inputPesquisa = document.getElementById('inputPesquisa');
   const btnExecutarPesquisa = document.getElementById('btnExecutarPesquisa');
@@ -32,15 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   if (btnExecutarPesquisa) {
-    btnExecutarPesquisa.addEventListener('click', () => {
-      carregarAgendamentos(1);
-    });
+    btnExecutarPesquisa.addEventListener('click', () =>
+      carregarAgendamentos(1),
+    );
   }
-
   if (selectStatus) {
     selectStatus.addEventListener('change', () => carregarAgendamentos(1));
   }
-
   if (btnLimparFiltros) {
     btnLimparFiltros.addEventListener('click', () => {
       inputPesquisa.value = '';
@@ -105,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mostrarNotificacao('Servidor offline.', 'erro');
     }
   }
+
   function formatarDataBR(dataIso) {
     if (!dataIso) return '---';
     const [ano, mes, dia] = dataIso.split('-');
@@ -130,6 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (item.status === 'RECUSADO') statusClasse += 'recusado';
       else statusClasse += 'pendente';
 
+      const tooltipAviso = !isVerified
+        ? 'Confirme seu e-mail no Perfil para gerenciar'
+        : '';
+      const disabledAttr =
+        !isVerified || item.status !== 'PENDENTE' ? 'disabled' : '';
+
       const linha = document.createElement('tr');
       linha.innerHTML = `
                 <td>${item.rm}</td>
@@ -142,9 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><span class="${statusClasse}">${item.status}</span></td>
                 <td class="acoes">
                     <button class="btn-visualizar" title="Ver Detalhes" onclick="verDetalhes(${item.id})">🔍</button>
-                    <button class="btn-aprovar" title="Aprovar" onclick="alterarStatus(${item.id}, 'APROVADO')" ${item.status !== 'PENDENTE' ? 'disabled' : ''}>✓</button>
-                    <button class="btn-recusar" title="Recusar" onclick="alterarStatus(${item.id}, 'RECUSADO')" ${item.status !== 'PENDENTE' ? 'disabled' : ''}>✕</button>
-                    <button class="btn-recusar" title="Excluir Permanentemente" onclick="excluirAgendamentoDireto(${item.id})">🗑️</button>
+                    <button class="btn-aprovar" title="${tooltipAviso || 'Aprovar'}" onclick="alterarStatus(${item.id}, 'APROVADO')" ${disabledAttr}>✓</button>
+                    <button class="btn-recusar" title="${tooltipAviso || 'Recusar'}" onclick="alterarStatus(${item.id}, 'RECUSADO')" ${disabledAttr}>✕</button>
+                    <button class="btn-recusar" title="Excluir Permanentemente" onclick="excluirAgendamentoDireto(${item.id})" ${!isVerified ? 'disabled' : ''}>🗑️</button>
                 </td>
             `;
       corpoTabela.appendChild(linha);
@@ -152,6 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.excluirAgendamentoDireto = async function (id) {
+    if (!isVerified)
+      return mostrarNotificacao(
+        'Verifique sua conta para excluir registros.',
+        'erro',
+      );
+
     const confirmou = await pedirConfirmacao({
       titulo: 'Excluir permanentemente?',
       mensagem:
@@ -184,15 +206,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  window.alterarStatus = async function (id, novoStatus) {
+    if (!isVerified)
+      return mostrarNotificacao(
+        'Verifique sua conta para alterar status.',
+        'erro',
+      );
+
+    const ehAprovado = novoStatus === 'APROVADO';
+
+    const confirmou = await pedirConfirmacao({
+      titulo: ehAprovado ? 'Confirmar Agendamento?' : 'Recusar Agendamento?',
+      mensagem: ehAprovado
+        ? 'O aluno receberá uma confirmação por e-mail.'
+        : 'Esta ação não poderá ser desfeita após confirmada.',
+      tipo: ehAprovado ? 'sucesso' : 'perigo',
+    });
+
+    if (!confirmou) return;
+
+    try {
+      const resposta = await fetch(`${API_BASE_URL}/agendamentos/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: novoStatus }),
+      });
+
+      const json = await resposta.json();
+
+      if (resposta.ok) {
+        const mensagemBanco =
+          json.message || `Agendamento ${novoStatus.toLowerCase()}!`;
+
+        const tipoNotificacao = mensagemBanco.includes('erro')
+          ? 'aviso'
+          : 'sucesso';
+
+        mostrarNotificacao(mensagemBanco, tipoNotificacao);
+        carregarAgendamentos(paginaAtual);
+      } else {
+        mostrarNotificacao(json.message || 'Erro ao alterar status', 'erro');
+      }
+    } catch (err) {
+      mostrarNotificacao('Falha na conexão.', 'erro');
+    }
+  };
+
   function criarBotaoPagina(numeroPagina, paginaAtualRef) {
     const btn = document.createElement('button');
     btn.innerText = numeroPagina;
     btn.className = 'btn-paginacao';
-
-    if (numeroPagina === paginaAtualRef) {
-      btn.classList.add('ativo');
-    }
-
+    if (numeroPagina === paginaAtualRef) btn.classList.add('ativo');
     btn.onclick = () => carregarAgendamentos(numeroPagina);
     return btn;
   }
@@ -200,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderizarPaginacao(paginacao) {
     if (!containerPaginacao) return;
     containerPaginacao.innerHTML = '';
-
     if (paginacao.totalPages <= 1) return;
 
     const { page: paginaAtualRef, totalPages: totalPaginas } = paginacao;
@@ -214,10 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let startPage = Math.max(1, paginaAtualRef - 2);
     let endPage = Math.min(totalPaginas, startPage + 4);
-
-    if (endPage - startPage < 4) {
-      startPage = Math.max(1, endPage - 4);
-    }
+    if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
 
     if (startPage > 1) {
       containerPaginacao.appendChild(criarBotaoPagina(1, paginaAtualRef));
@@ -255,44 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.verDetalhes = function (id) {
     window.location.href = `./agendamento.html?id=${id}`;
-  };
-
-  window.alterarStatus = async function (id, novoStatus) {
-    const ehAprovado = novoStatus === 'APROVADO';
-
-    const confirmou = await pedirConfirmacao({
-      titulo: ehAprovado ? 'Confirmar Agendamento?' : 'Recusar Agendamento?',
-      mensagem: ehAprovado
-        ? 'O aluno receberá uma confirmação por e-mail.'
-        : 'Esta ação não poderá ser desfeita após confirmada.',
-      tipo: ehAprovado ? 'sucesso' : 'perigo',
-    });
-
-    if (!confirmou) return;
-
-    try {
-      const resposta = await fetch(`${API_BASE_URL}/agendamentos/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: novoStatus }),
-      });
-
-      if (resposta.ok) {
-        mostrarNotificacao(
-          `Agendamento ${novoStatus.toLowerCase()}!`,
-          'sucesso',
-        );
-        carregarAgendamentos(paginaAtual);
-      } else {
-        const erro = await resposta.json();
-        mostrarNotificacao(erro.message || 'Erro ao alterar status', 'erro');
-      }
-    } catch (err) {
-      mostrarNotificacao('Falha na conexão.', 'erro');
-    }
   };
 
   carregarAgendamentos(1);

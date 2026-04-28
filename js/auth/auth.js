@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (res.ok) {
           localStorage.setItem('token', dados.data.token);
+          localStorage.setItem('user', JSON.stringify(dados.data.user));
+
           localStorage.setItem('origem_login', 'manual');
           window.location.href = 'dashboard/painel.html';
         } else {
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (res.ok) {
           localStorage.setItem('token', resposta.data.token);
-          localStorage.setItem('usuario', JSON.stringify(resposta.data.user));
+          localStorage.setItem('user', JSON.stringify(resposta.data.user));
 
           mostrarNotificacao(
             'Registro concluído! Redirecionando...',

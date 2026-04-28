@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const confirmou = await pedirConfirmacao({
       titulo: ehAprovado ? 'Aprovar Agendamento?' : 'Recusar Agendamento?',
       mensagem: ehAprovado
-        ? `Confirmar o atendimento para ${document.getElementById('detalheNome').textContent}?`
-        : 'Tem certeza que deseja recusar este pedido?',
+        ? `Confirmar o atendimento para ${document.getElementById('detalheNome').textContent}? O aluno será notificado por e-mail.`
+        : 'Tem certeza que deseja recusar este pedido? O aluno será notificado por e-mail.',
       tipo: ehAprovado ? 'sucesso' : 'perigo',
     });
 
@@ -110,15 +110,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: JSON.stringify({ status: novoStatus }),
       });
 
+      const json = await res.json();
+
       if (res.ok) {
-        mostrarNotificacao(
-          `Agendamento ${novoStatus.toLowerCase()}!`,
-          'sucesso',
-        );
+        const mensagemBanco =
+          json.message || `Agendamento ${novoStatus.toLowerCase()}!`;
+
+        const tipoNotificacao = mensagemBanco.includes('erro')
+          ? 'aviso'
+          : 'sucesso';
+
+        mostrarNotificacao(mensagemBanco, tipoNotificacao);
+
         buscarDetalhes();
       } else {
-        const erro = await res.json();
-        mostrarNotificacao(erro.message || 'Erro ao atualizar status.', 'erro');
+        mostrarNotificacao(json.message || 'Erro ao atualizar status.', 'erro');
       }
     } catch (err) {
       mostrarNotificacao('Falha na conexão.', 'erro');
