@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gestão - Biblioteca Etec</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <script src="../../js/auth/checkAuth.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body class="fundo-painel">
+
+    <main class="container-painel">
+        <header class="cabecalho-painel">
+            <div>
+                <h1>Gestão de Agendamentos</h1>
+                <p>Visualize e gerencie as solicitações dos alunos</p>
+            </div>
+
+            <div class="controles-topo">
+                <button class="btn-secundario" onclick="window.location.href='./../../index.html'"
+                    title="Ir para Formulário de Agendamento">
+                    🏠 Início
+                </button>
+                <button id="btn-perfil" class="btn-secundario" onclick="window.location.href='./perfil.html'">
+                    👤 Meu Perfil
+                </button>
+                <button id="btn-sair" class="btn-sair" onclick="logout()">
+                    Sair do Painel
+                </button>
+            </div>
+        </header>
+
+        <div class="filtros-container">
+            <div class="busca-container">
+                <input type="text" id="inputPesquisa" placeholder="Buscar por Nome, RM ou E-mail (Enter)..."
+                    class="input-filtro">
+                <button id="btnExecutarPesquisa" title="Pesquisar">🔍</button>
+            </div>
+
+            <select id="selectStatus" class="select-filtro">
+                <option value="">Todos os Status</option>
+                <option value="PENDENTE">Pendentes</option>
+                <option value="APROVADO">Aprovados</option>
+                <option value="RECUSADO">Recusados</option>
+            </select>
+
+            <button id="btnLimparFiltros" class="btn-secundario" title="Limpar Filtros">↺</button>
+        </div>
+
+        <section class="tabela-responsiva">
+            <table>
+                <thead>
+                    <tr>
+                        <th>RM</th>
+                        <th>Nome</th>
+                        <th>Curso</th>
+                        <th>E-mail</th>
+                        <th>Serviço</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 20px;">
+                            ⏳ Carregando agendamentos do sistema...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <div id="paginacao" class="paginacao-container">
+        </div>
+    </main>
+
+    <script src="./../../js/utils/ui.js"></script>
+    <script src="./../../js/dashboard/painel.js"></script>
+</body>
+
+</html>

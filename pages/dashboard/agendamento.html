@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha do Agendamento - Biblioteca Etec</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <script src="./../../js/auth/checkAuth.js"></script>
+    <link rel="stylesheet" href="./../../css/style.css">
+    <style>
+        /* ==========================================
+           ESTILO DA FICHA DE AGENDAMENTO
+        ========================================== */
+
+        /* Deixando o container mais largo para a ficha respirar */
+        .container-ficha {
+            max-width: 700px;
+            margin-top: 40px;
+        }
+
+        /* Estrutura de Grid para os dados não ficarem um embaixo do outro */
+        .card-detalhes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* Duas colunas iguais */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* Os "quadradinhos" de informação */
+        .info-grupo {
+            background-color: #f8f9fa;
+            /* Fundo cinza bem claro */
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            /* Detalhe azul profissional */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Sobrescrevendo o p centralizado global */
+        .info-grupo label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+
+        .info-grupo p {
+            margin: 0;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            text-align: left;
+            /* Garante que fica organizado na esquerda */
+        }
+
+        /* ==========================================
+           BOTÕES DE APROVAR E RECUSAR
+        ========================================== */
+        .container-acoes {
+            grid-column: span 2;
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 25px;
+        }
+
+        .btn-aprovar-largo,
+        .btn-recusar-largo {
+            flex: 1;
+            /* Faz os botões dividirem o espaço igualmente */
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-aprovar-largo {
+            background-color: #27ae60;
+            box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);
+        }
+
+        .btn-aprovar-largo:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        .btn-recusar-largo {
+            background-color: #e74c3c;
+            box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-recusar-largo:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Responsivo para celular: quebra para 1 coluna */
+        @media (max-width: 600px) {
+            .card-detalhes {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+
+            .container-acoes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body class="fundo-painel">
+    <main class="container container-ficha">
+        <header style="margin-bottom: 10px;">
+            <a href="./painel.html" class="btn-secundario"
+                style="text-decoration: none; display: inline-block; margin-bottom: 20px;">
+                ← Voltar ao Painel
+            </a>
+            <h1>Ficha do Agendamento</h1>
+        </header>
+
+        <section class="card-detalhes" id="areaDados">
+
+            <div class="info-grupo full-width">
+                <label>Nome do Aluno</label>
+                <p id="detalheNome">...</p>
+            </div>
+
+            <div class="info-grupo">
+                <label>RM</label>
+                <p id="detalheRM">...</p>
+            </div>
+
+            <div class="info-grupo">
+                <label>Curso</label>
+                <p id="detalheCurso">...</p>
+            </div>
+
+            <div class="info-grupo full-width">
+                <label>E-mail Institucional</label>
+                <p id="detalheEmail">...</p>
+            </div>
+
+            <div class="info-grupo">
+                <label>Data Agendada</label>
+                <p id="detalheData">...</p>
+            </div>
+
+            <div class="info-grupo">
+                <label>Horário</label>
+                <p id="detalheHorario">...</p>
+            </div>
+
+            <div class="info-grupo full-width">
+                <label>Serviços Solicitados</label>
+                <p id="detalheServicos">...</p>
+            </div>
+
+            <div class="info-grupo full-width"
+                style="border-left-color: transparent; background: transparent; padding-left: 0;">
+                <label>Status Atual</label>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="detalheStatus" class="status-badge">...</span>
+
+                    <button onclick="apagarAgendamento()" class="status-recusado"
+                        style="cursor: pointer; border: none; text-transform: uppercase; border-radius: 4px; padding: 5px 10px; font-size: 11px; font-weight: 700; width: auto; margin: 0; line-height: normal;">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+
+            <div id="acoesAgendamento" class="container-acoes" style="display: none;">
+                <button onclick="processarAgendamento('APROVADO')" class="btn-aprovar-largo">✓ Aprovar
+                    Agendamento</button>
+                <button onclick="processarAgendamento('RECUSADO')" class="btn-recusar-largo">✕ Recusar
+                    Agendamento</button>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="./../../js/utils/ui.js"></script>
+    <script src="./../../js/dashboard/agendamento.js"></script>
+</body>
+
+</html>

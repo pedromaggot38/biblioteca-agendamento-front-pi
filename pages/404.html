@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problema no Sistema - Biblioteca Etec</title>
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .container-erro {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .codigo-status {
+            font-size: 72px;
+            font-weight: bold;
+            color: #b30000;
+            margin: 0;
+        }
+
+        .mensagem-suave {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .detalhe-tecnico {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #444;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body class="fundo-painel">
+
+    <main class="container container-erro">
+        <div id="icone-erro" style="font-size: 50px; margin-bottom: 10px;">🔌</div>
+        <h1 id="status-titulo" class="codigo-status">Erro</h1>
+        <p id="mensagem-texto" class="mensagem-suave">Não foi possível processar sua solicitação no momento.</p>
+
+        <div>
+            <span class="detalhe-tecnico">Causa: <span id="causa-erro">Desconhecida</span></span>
+        </div>
+
+        <div class="acoes-erro">
+            <a href="./auth.html" class="btn-sair"
+                style="text-decoration: none; margin-left: 10px; background: #666;">Ir
+                para Login</a>
+        </div>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const status = params.get('status') || 'Ops!';
+        const msg = params.get('msg') || 'Ocorreu um erro inesperado no servidor.';
+
+        document.getElementById('status-titulo').innerText = status;
+        document.getElementById('causa-erro').innerText = decodeURIComponent(msg);
+
+        if (status === '404') {
+            document.getElementById('icone-erro').innerText = '🔍';
+            document.getElementById('mensagem-texto').innerText = 'A página que você procura não existe.';
+        }
+
+        if (status === '500') {
+            document.getElementById('icone-erro').innerText = '⚙️';
+            document.getElementById('mensagem-texto').innerText = 'O servidor encontrou um problema interno.';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Biblioteca</title>
+    <link rel="icon" type="image/png" href="../../assets/favicon.png">
+    <script src="./../../js/auth/checkAuth.js"></script>
+    <link rel="stylesheet" href="./../../css/style.css">
+    <style>
+        .cartao-perfil {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 850px;
+            margin: 40px auto;
+            border-top: 4px solid #2c3e50;
+        }
+
+        .grid-campos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .grid-campos {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+
+        .abas-perfil {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 15px 0;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 700;
+            color: #95a5a6;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn.ativa {
+            color: #2c3e50;
+            border-bottom-color: #2c3e50;
+        }
+
+        .grupo-input label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+        }
+
+        .grupo-input input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-salvar {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-verde,
+        .btn-azul {
+            background-color: #2c3e50;
+        }
+
+        .btn-salvar:hover {
+            background-color: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .instrucao-senha {
+            font-size: 13px;
+            color: #5d6d7e;
+            background: #ebf5fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #3498db;
+        }
+    </style>
+</head>
+
+<body class="fundo-painel">
+
+    <main class="container-painel">
+        <header class="cabecalho-painel">
+            <div>
+                <h1>Meu Perfil</h1>
+                <p>Configurações de conta e segurança</p>
+            </div>
+            <button class="btn-secundario" onclick="window.location.href='./painel.html'">
+                ⬅ Voltar ao Painel
+            </button>
+        </header>
+
+        <section class="cartao-perfil">
+            <nav class="abas-perfil">
+                <button id="tabDados" class="tab-btn ativa">Dados Pessoais</button>
+                <button id="tabSenha" class="tab-btn aba-senha">Segurança</button>
+            </nav>
+
+            <form id="formPerfil" novalidate>
+                <div class="grid-campos">
+                    <div class="grupo-input">
+                        <label for="nomeAdmin">Nome Completo</label>
+                        <input type="text" id="nomeAdmin" placeholder="Ex: Pedro Henrique" required>
+                    </div>
+
+                    <div class="grupo-input">
+                        <label for="emailAdmin">E-mail Institucional</label>
+                        <input type="email" id="emailAdmin" placeholder="admin@escola.com" required>
+                    </div>
+
+                    <div class="full-width">
+                        <button type="submit" id="btnSalvarPerfil" class="btn-salvar btn-verde">
+                            Atualizar Informações
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <form id="formSenha" style="display: none;" novalidate>
+                <div class="instrucao-senha">
+                    Para sua segurança, a nova senha deve ter no mínimo 4 caracteres.
+                </div>
+
+                <div class="grupo-input"
+                    style="margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;">
+                    <label for="senhaAtual">Senha Atual</label>
+                    <input type="password" id="senhaAtual" placeholder="Confirme sua identidade" required>
+                </div>
+
+                <div class="grupo-input" style="margin-bottom: 10px">
+                    <label for="novaSenha">Nova Senha</label>
+                    <input type="password" id="novaSenha" placeholder="Digite a nova senha" required>
+                </div>
+
+                <div class="grupo-input">
+                    <label for="confirmarSenha">Confirmar Nova Senha</label>
+                    <input type="password" id="confirmarSenha" placeholder="Repita a nova senha" required>
+                </div>
+
+                <button type="submit" id="btnSalvarSenha" class="btn-salvar btn-azul">
+                    Alterar Senha do Sistema
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script src="./../../js/utils/ui.js"></script>
+    <script src="./../../js/dashboard/perfil.js"></script>
+</body>
+
+</html>

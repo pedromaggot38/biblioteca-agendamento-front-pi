@@ -1,0 +1,651 @@
+/* ==========================================
+   CONFIGURAÇÕES GERAIS E RESET
+========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fundo padrão para as páginas de Login e Cadastro */
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   ESTILOS DOS FORMULÁRIOS (Login, Registro, Agendamento)
+========================================== */
+.container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 500px;
+    border-top: 6px solid #2c3e50;
+    /* Azul Marinho Profissional */
+    margin: auto;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.campo,
+.campo-servicos {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+}
+
+input:focus,
+select:focus {
+    border-color: #3498db;
+    /* Azul Moderno (Ação) */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.campo-servicos label {
+    font-weight: normal;
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 5px;
+    cursor: pointer;
+    color: #333;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #2c3e50;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #34495e;
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.link-admin {
+    text-align: center;
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.link-admin a {
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s;
+}
+
+.link-admin a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* ==========================================
+   ESTILOS EXCLUSIVOS DO PAINEL DE GESTÃO
+========================================== */
+
+/* 1. Trava o scroll da página inteira (Apenas no Painel) */
+/* ANTES: height: 100vh; overflow: hidden; */
+body.fundo-painel {
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f9;
+}
+
+.container-painel {
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 1400px;
+    border-top: 6px solid #2c3e50;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* Cabeçalho do Painel */
+.cabecalho-painel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f4f4f9;
+    padding-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.cabecalho-painel h1 {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.cabecalho-painel p {
+    text-align: left;
+    margin-bottom: 0;
+}
+
+.controles-topo {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-secundario {
+    background-color: #7f8c8d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    width: auto;
+}
+
+.btn-secundario:hover {
+    background-color: #95a5a6;
+}
+
+.btn-sair {
+    background-color: #e74c3c;
+    /* Mantido o semântico vermelho para "Sair", mas um tom mais moderno */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+    width: auto;
+}
+
+.btn-sair:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================
+   BARRA DE FILTROS E PESQUISA NO PAINEL
+========================================== */
+.filtros-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-filtro,
+.select-filtro {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.input-filtro:focus,
+.select-filtro:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+#btnLimparFiltros {
+    padding: 10px 15px;
+    margin-top: 0;
+}
+
+/* ==========================================
+   TABELA RESPONSIVA E SCROLL INTERNO
+========================================== */
+.tabela-responsiva {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #444;
+}
+
+/* Cabeçalho Fixo (Sticky) */
+.tabela-responsiva thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: bold;
+    z-index: 1;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-responsiva td:nth-child(4),
+.tabela-responsiva td:nth-child(5) {
+    white-space: normal;
+}
+
+/* ==========================================
+   CORES DE STATUS (Equilíbrio 65%)
+========================================== */
+.status-pendente {
+    background-color: #f1c40f;
+    /* Amarelo/Laranja equilibrado */
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(241, 196, 15, 0.2);
+}
+
+.status-aprovado {
+    background-color: #2ecc71;
+    /* Verde esmeralda mais leve */
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+.status-recusado {
+    background-color: #e74c3c;
+    /* Vermelho suave (Alizarin) */
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+}
+
+/* ==========================================
+   BOTÕES DE AÇÃO NA TABELA
+========================================== */
+.acoes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-visualizar,
+.btn-aprovar,
+.btn-recusar {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Cores semânticas ajustadas para a paleta */
+.btn-aprovar {
+    background-color: #27ae60;
+}
+
+.btn-aprovar:hover:not(:disabled) {
+    background-color: #219653;
+    transform: scale(1.05);
+}
+
+.btn-recusar {
+    background-color: #e74c3c;
+}
+
+.btn-recusar:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.btn-visualizar {
+    background-color: #2c3e50;
+}
+
+.btn-visualizar:hover:not(:disabled) {
+    background-color: #34495e;
+    transform: scale(1.05);
+}
+
+.btn-aprovar:disabled,
+.btn-recusar:disabled,
+.btn-visualizar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ==========================================
+   ESTILOS DE VALIDAÇÃO (ERROS)
+========================================== */
+.mensagem-erro {
+    display: none;
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.campo.com-erro .mensagem-erro {
+    display: block;
+}
+
+.campo.com-erro input {
+    border-color: #e74c3c;
+    background-color: #fdedec;
+}
+
+/* ==========================================
+   RODAPÉ GERAL E NOTIFICAÇÕES (TOAST)
+========================================== */
+.rodape-biblioteca {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #6c757d;
+    border-top: 1px solid #e9ecef;
+    width: 100%;
+    margin-top: auto;
+}
+
+.rodape-biblioteca a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.rodape-biblioteca a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 250px;
+    animation: slideIn 0.3s ease-out;
+    border-left: 6px solid #3498db;
+    /* Default border color */
+}
+
+.toast.sucesso {
+    border-left-color: #27ae60;
+}
+
+.toast.erro {
+    border-left-color: #e74c3c;
+}
+
+.toast.aviso {
+    border-left-color: #f39c12;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast.fadeOut {
+    animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* ==========================================
+   PAGINAÇÃO ELEGANTE
+========================================== */
+.paginacao-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 10px 0;
+    flex-shrink: 0;
+}
+
+.btn-paginacao {
+    width: auto;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    margin: 0;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #495057;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn-paginacao:hover:not(:disabled) {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+    color: #212529;
+    transform: translateY(-1px);
+}
+
+.btn-paginacao.ativo {
+    background-color: #2c3e50;
+    color: #ffffff;
+    border-color: #2c3e50;
+    box-shadow: 0 2px 6px rgba(44, 62, 80, 0.3);
+    pointer-events: none;
+}
+
+.btn-paginacao:disabled {
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    border-color: #e9ecef;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.dots-paginacao {
+    color: #6c757d;
+    font-weight: bold;
+    padding: 0 2px;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+/* ==========================================
+   ESTILO DA LUPA DE PESQUISA
+========================================== */
+.busca-container {
+    position: relative;
+    flex-grow: 3;
+    display: flex;
+}
+
+.busca-container .input-filtro {
+    width: 100%;
+    padding-right: 40px;
+}
+
+#btnExecutarPesquisa {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: auto;
+    margin: 0;
+    padding: 5px 10px;
+    transition: transform 0.2s ease;
+    box-shadow: none;
+    color: #7f8c8d;
+}
+
+#btnExecutarPesquisa:hover {
+    transform: translateY(-50%) scale(1.1);
+    background: transparent;
+    color: #2c3e50;
+}
+
+/* ==========================================
+   MEDIA QUERIES (RESPONSIVIDADE PARA TELAS MENORES)
+========================================== */
+@media (max-width: 992px) {
+    .cabecalho-painel {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .controles-topo {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .filtros-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .busca-container {
+        width: 100%;
+    }
+
+    body.fundo-painel {
+        padding: 10px;
+    }
+
+    .container-painel {
+        padding: 15px;
+    }
+}
