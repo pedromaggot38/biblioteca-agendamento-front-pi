@@ -96,11 +96,33 @@ document.addEventListener('DOMContentLoaded', () => {
     emailInputEdicao.focus();
   });
 
+  emailInputEdicao?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      btnGerar.click();
+    }
+  });
+
   btnGerar?.addEventListener('click', async () => {
     const userLocal = JSON.parse(localStorage.getItem('user'));
+    const novoEmailDigitado = emailInputEdicao.value.trim();
+
+    if (containerNovoEmail.style.display === 'block') {
+      if (novoEmailDigitado.toLowerCase() === userLocal.email.toLowerCase()) {
+        return mostrarNotificacao(
+          'Este já é o seu e-mail atual. Digite um novo endereço.',
+          'aviso',
+        );
+      }
+
+      if (!novoEmailDigitado) {
+        return mostrarNotificacao('Por favor, digite um novo e-mail.', 'aviso');
+      }
+    }
+
     const emailAlvo =
       containerNovoEmail.style.display === 'block'
-        ? emailInputEdicao.value.trim()
+        ? novoEmailDigitado
         : userLocal.email;
 
     try {
@@ -120,9 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (areaCodigo) areaCodigo.style.display = 'block';
       if (btnValidar) btnValidar.style.display = 'block';
+
       btnGerar.innerText = 'Reenviar Código';
       emailInputEdicao.readOnly = true;
       btnHabilitarTroca.style.display = 'none';
+
+      if (inputCodigo) inputCodigo.focus();
     } catch (e) {
       mostrarNotificacao(e.message, 'erro');
     }
