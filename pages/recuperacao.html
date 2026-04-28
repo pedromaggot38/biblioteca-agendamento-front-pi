@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Senha - Biblioteca</title>
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Recuperar Senha</h1>
+
+        <div id="mensagemFeedback"
+            style="text-align: center; margin-bottom: 15px; font-weight: bold; font-size: 14px; display: none;"></div>
+
+        <form id="formSolicitarCodigo">
+            <p>Informe seu e-mail administrativo para receber o código de 6 dígitos.</p>
+            <div class="campo">
+                <label for="emailRecuperacao">E-mail</label>
+                <input type="email" id="emailRecuperacao" required placeholder="email@dominio.com">
+            </div>
+            <button type="submit" id="btnSolicitar">Enviar Código</button>
+        </form>
+
+        <form id="formRedefinirSenha" style="display: none;">
+            <p>Insira o código recebido no e-mail e a nova senha.</p>
+            <div class="campo">
+                <label for="token">Código de 6 dígitos</label>
+                <input type="text" id="token" required maxlength="6" placeholder="000000"
+                    style="text-align: center; font-size: 18px; letter-spacing: 4px;">
+            </div>
+            <div class="campo">
+                <label for="novaSenha">Nova Senha</label>
+                <input type="password" id="novaSenha" required>
+            </div>
+            <div class="campo">
+                <label for="confirmaSenha">Confirmar Nova Senha</label>
+                <input type="password" id="confirmaSenha" required>
+            </div>
+            <button type="submit" id="btnRedefinir" style="background-color: #27ae60;">Redefinir Senha</button>
+        </form>
+
+        <div class="link-admin">
+            <a href="./auth.html">← Voltar ao Login</a>
+        </div>
+    </main>
+
+    <script src="../js/utils/ui.js"></script>
+    <script src="../js/auth/recuperacao.js"></script>
+</body>
+
+</html>
